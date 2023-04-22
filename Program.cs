@@ -11,14 +11,25 @@
 
     public class Scaler //used to scale the units measured
     {
-        public double scaleIngredient(string unit, double amount)//unit = measurning unit, amount = amount of ingredient
+        public double scaleIngredient(double scaleUnit, double amount)//scaleUnit = what the recipe is scalled by, amount = amount of ingredient
         {
-            return 0.0; 
+            amount = amount * scaleUnit;
+            return amount; 
         }
     }
 
     public class RecipeList//used to set,store and get details for the recipe/steps
     {
+        //declarations
+        private int numStep; // number of steps
+        private int numIngredients; // number of ingredients
+        private string[] ingredients = new string[20]; //list of ingredients
+        private string[] unitMeasured = new string[20]; // descriptor of the measurment unit
+        private double[] amount = new double[20]; //the amount of ingredient
+        private string[] ingredientsPerStep = new string[20]; // the list that groups which ingredients go in which steps
+        private string[] stepDescrip = new string[20];
+
+
         //setter for the number of steps
         public void setNumStep()
         {
@@ -29,7 +40,6 @@
         {
 
         }
-
         //getter method to fetch the ingredients list
         public string[] getIngredients()
         {
@@ -40,12 +50,12 @@
         {
 
         }
-        //getter to get the measurement of the ingredient
+        //getter to get the measurement unit of the ingredient
         public string[] getUnitMeasured()
         {
             return null;
         }
-        //setter for the measurment of the ingredient
+        //setter for the measurment  unit of the ingredient
         public void setUnitMeasured()
         {
 
@@ -61,13 +71,13 @@
 
         }
         //getter to get the ingredients needed for each step
-        public string[] getIngredientsStep() //possible solution, use format ;x;x;x/ where ; = there is an item next, x = ingredient related to getIngredient
+        public string[] getIngredientsPerStep() //possible solution, use format ;x;x;x/ where ; = there is an item next, x = ingredient related to getIngredient
                                              // / = end of list, # = no further steps
         {
             return null;
         }
         //setter to set the ingredients needed for each step
-        public void setIngredientsStep()
+        public void setIngredientsPerStep()
         {
 
         }
