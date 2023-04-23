@@ -1,11 +1,74 @@
 ﻿namespace Prog6221POE
 {
+
+    public class RecipeMachine_driver
+    {
+        public static void Main(string [] args)
+        {
+            RecipeMachine rm = new RecipeMachine();
+            rm.Run();
+        }
+    }
     public class RecipeMachine
     {
-        static void Main(string[] args)
+        private RecipeList rl = new RecipeList();//rl stands for recipe list
+        private Scaler scl = new Scaler(); //scl short for scaler
+        InputChecker check = new InputChecker();
+        public void Run()
         {
-            RecipeList rl = new RecipeList();//rl stands for recipe list
-            Scaler scl = new Scaler(); //scl short for scaler
+            dataEntry();
+        }
+        private void dataEntry() //used to call methods in order for the data entry
+        {
+            //declaration for varibles only used inside the class
+            string tempStr; //temporary variable, will be overwritten multiple times
+            int tempInt;  //temporary variable, will be overwritten multiple times
+
+
+            //prompt user, the cast the answer into the format needed
+            Console.WriteLine("Please Enter The Amount Of Ingredients In This Recipe");
+            tempStr = Console.ReadLine().Trim();
+            if (!check.validInput(tempStr))
+            {
+                while(!check.validInput(tempStr))
+                {
+                    Console.WriteLine("Invalid Number Format Entered");
+                    Console.WriteLine("Please Ensure That Only Numbers Are Entered");
+                }
+            }
+            tempInt = int.Parse(tempStr);
+            rl.setNumIngredients(tempInt);
+            
+            
+
+            //prompt user, the cast the answer into the format needed
+            Console.WriteLine("Please Enter The Amount Of Steps In This Recipe");
+            Console.ReadLine().Trim();
+            if (!check.validInput(tempStr))
+            {
+                while (!check.validInput(tempStr))
+                {
+                    Console.WriteLine("Invalid Number Format Entered");
+                    Console.WriteLine("Please Ensure That Only Numbers Are Entered");
+                }
+            }
+            tempInt = int.Parse(tempStr);
+            rl.setNumStep(tempInt);
+        }
+    }
+    public class InputChecker
+    {
+        public bool validInput(string str)
+        {
+            try
+            {
+                int.Parse(str);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
         }
     }
 
@@ -29,16 +92,25 @@
         private string[] ingredientsPerStep = new string[20]; // the list that groups which ingredients go in which steps
         private string[] stepDescrip = new string[20];
 
-
-        //setter for the number of steps
-        public void setNumStep()
+        //getter for the number of steps
+        public int getNumStep()
         {
-
+            return numStep;
+        }
+        //setter for the number of steps
+        public void setNumStep(int numberOfSteps)
+        {
+            numStep = numberOfSteps;
+        }
+        //getter for the number of ingredients
+        public int getNumIngredients()
+        {
+            return numIngredients;
         }
         //setter for the number of ingredients
-        public void setNumIngredients()
+        public void setNumIngredients(int numberOfIngredients)
         {
-
+            numIngredients = numberOfIngredients;
         }
         //getter method to fetch the ingredients list
         public string[] getIngredients()
