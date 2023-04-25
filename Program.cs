@@ -1,6 +1,18 @@
 ﻿namespace Prog6221POE
 {
-
+    /*
+     * Version 0.3 NonFunctional
+     * 
+     * 
+     * Internal dev notes
+    *
+    * ignore/delete anything related to ingredients per step, user must manually enter ingredients in the step description
+    *
+    *
+    *
+    *
+    *
+    */
     public class RecipeMachine_driver
     {
         public static void Main(string [] args)
@@ -89,7 +101,6 @@
         private string[] ingredients = new string[20]; //list of ingredients
         private string[] unitMeasured = new string[20]; // descriptor of the measurment unit
         private double[] amount = new double[20]; //the amount of ingredient
-        private string[] ingredientsPerStep = new string[20]; // the list that groups which ingredients go in which steps
         private string[] stepDescrip = new string[20];
 
         //getter for the number of steps
@@ -139,17 +150,6 @@
         }
         //setter for the amount of the ingredient
         public void setUnitAmount()
-        {
-
-        }
-        //getter to get the ingredients needed for each step
-        public string[] getIngredientsPerStep() //possible solution, use format ;x;x;x/ where ; = there is an item next, x = ingredient related to getIngredient
-                                             // / = end of list, # = no further steps
-        {
-            return null;
-        }
-        //setter to set the ingredients needed for each step
-        public void setIngredientsPerStep()
         {
 
         }
