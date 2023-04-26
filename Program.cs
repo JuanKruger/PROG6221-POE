@@ -1,17 +1,16 @@
 ﻿namespace Prog6221POE
 {
     /*
-     * Version (NF)0.4 NonFunctional  
+     * Version (NF)0.5 NonFunctional  
      * 
      * 
      * Internal dev notes
     *
-    * ignore/delete anything related to ingredients per step, user must manually enter ingredients in the step description
-    *
+    * 
     * currently working on
-    * storing info on ingredients line 69, use loops
+    * storing info on ingredients line 69, use loops, working on ingredient name
     *
-    *Issue with loop identified, idk if my change fixed it, but hopefully it works and will be tested later, line 77/82
+    *
     *
     *
     */
@@ -37,6 +36,7 @@
             //declaration for varibles only used inside the class
             string tempStr; //temporary variable, will be overwritten multiple times
             int tempInt;  //temporary variable, will be overwritten multiple times
+            int switchInt; // used to opperate the switch case 
             //declaration of arrays
             string[] ingredients = new string[20];
             string[] units = new string[20];
@@ -77,27 +77,140 @@
             //propmt user to enter info on ingredients, ie name, unit and amount used
             for (int i = 0; i < rl.getNumIngredients(); i++)
             {
-                Console.WriteLine("Please Enter Information On The First Ingredient             Ingredient{0}/{1}", i, rl.getNumIngredients());
-                Console.ReadKey();
+                Console.WriteLine("Please Enter Information On The Ingredient for the following parameters             Ingredient{0}/{1}", i, rl.getNumIngredients());
+                Console.WriteLine("Please enter the Ingredients Name");
+                tempStr = Console.ReadLine().Trim();
+                if (!check.notNullInput(tempStr))
+                {
+                    while (!check.notNullInput(tempStr));
+                    {
+                        Console.WriteLine("Please Enter The Name Of The Ingredient, Please don't leave it empty");
+                        tempStr = Console.ReadLine();
+                    }
+                }
+                ingredients[i] = tempStr; //adding to local array, setting it on the setter array after all data entry is complete
+
+                Console.WriteLine("Please Select The Unit Used To measure the ingredient");//gives several options, of bakeing units
+                tempStr = Console.ReadLine().Trim();
+                if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 10))
+                {
+                    while (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 10))
+                    {
+                        Console.WriteLine("Invalid Number Format Entered");
+                        Console.WriteLine("Please Ensure That Only Numbers Are Entered");
+                        tempStr = Console.ReadLine().Trim();
+                    }
+                }
+                switchInt = int.Parse(tempStr);//parsing int to get a valid input
+
+
+                switch (switchInt)
+                {
+                    case 0:
+                        {
+                            // Code to execute for option 0
+                            break;
+                        }
+                    case 1:
+                        {
+                            // Code to execute for option 1
+                            break;
+                        }
+                    case 2:
+                        {
+                            // Code to execute for option 2
+                            break;
+                        }
+                    case 3:
+                        {
+                            // Code to execute for option 3
+                            break;
+                        }
+                    case 4:
+                        {
+                            // Code to execute for option 4
+                            break;
+                        }
+                    case 5:
+                        {
+                            // Code to execute for option 5
+                            break;
+                        }
+                    case 6:
+                        {
+                            // Code to execute for option 6
+                            break;
+                        }
+                    case 7:
+                        {
+                            // Code to execute for option 7
+                            break;
+                        }
+                    case 8:
+                        {
+                            // Code to execute for option 8
+                            break;
+                        }
+                    case 9:
+                        {
+                            // Code to execute for option 9
+                            break;
+                        }
+                    default:
+                        {
+                            // Code to execute if no case matches
+                            break;
+                        }
+                }
+
             }
-            for (int i = 0; i < rl.getNumIngredients(); i++)//used to enter info to describe each step
+
+            for (int i = 0; i < rl.getNumStep(); i++)//used to enter info to describe each step
             {
 
             }
             //adding methods that set null for now, just to ensure i remember to implement them/easy refrence
-            rl.setIngredient(null);//null value, replace with output
-            rl.setUnitMeasured(null);
-            rl.setUnitAmount(null);
-            rl.setStepDescrip(null);
+            //rl.setIngredient(null);//null value, replace with output
+            //rl.setUnitMeasured(null);
+            //rl.setUnitAmount(null);
+            //rl.setStepDescrip(null);
 
         }
     }
     public class InputChecker
     {
+        public bool intConstricCheck(string valSTR, int a, int b)//valSTR is the value being checked, a and b are the constraints, a is the lower bound while b is upper
+        {
+            int c = a - 1;// reasignment done to provide upper and lower bounds
+            int d = b + 1;
+            int val;
+
+            try
+            {
+                val = int.Parse(valSTR);
+            }
+            catch (FormatException e)
+            {
+                return false;
+            }
+
+            if (val > c && val < d)
+            {
+                return true;
+            }
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Please ensure that the number falls within the accepted range");
+            Console.ForegroundColor = ConsoleColor.White;
+            return false;
+            
+        }
         public bool validInput(string str)//checking if string is null or
         {
             if (string.IsNullOrEmpty(str))//null input check
             {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("NULL INPUT ERROR");
+                Console.ForegroundColor = ConsoleColor.White;
                 return false;
             }
 
@@ -107,6 +220,9 @@
             }
             catch (Exception e)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("INVALID CHARACTER INPUT ERROR");
+                Console.ForegroundColor = ConsoleColor.White;
                 return false;
             }
             return true;
@@ -115,6 +231,9 @@
         {
             if (string.IsNullOrEmpty(str))
             {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("NULL INPUT ERROR");
+                Console.ForegroundColor = ConsoleColor.White;
                 return false;
             }
             else
