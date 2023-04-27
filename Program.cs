@@ -1,7 +1,7 @@
 ﻿namespace Prog6221POE
 {
     /*
-     * Version 0.14 Functional  
+     * Version 0.15 Functional  
      * 
      * 
      * Internal dev notes
@@ -289,6 +289,7 @@
             }
             tempInt = int.Parse(tempStr);
             rl.setNumIngredients(tempInt);
+            Console.WriteLine("");
             
             //prompt user, the cast the answer into the format needed
             Console.WriteLine("Please Enter The Amount Of Steps In This Recipe");
@@ -304,10 +305,12 @@
             }
             tempInt = int.Parse(tempStr);
             rl.setNumStep(tempInt);
+            Console.WriteLine("");
 
             //propmt user to enter info on ingredients, ie name, unit and amount used
             for (int i = 0; i < rl.getNumIngredients(); i++)
             {
+                Console.WriteLine("");
                 counter = i + 1;
                 Console.WriteLine("Please Enter Information On The Ingredient for the following parameters             Ingredient{0}/{1}", counter, rl.getNumIngredients());
                 Console.WriteLine("Please enter the Ingredients Name");
@@ -322,6 +325,8 @@
                     }
                 }
                 ingredients[i] = tempStr; //adding to local array, setting it on the setter array after all data entry is complete
+
+                Console.WriteLine("");
 
                 Console.WriteLine("Please Select The Unit Used To measure the ingredient");//gives several options, of bakeing units
                 Console.WriteLine("1. Millilitre");
@@ -345,6 +350,7 @@
                     }
                 }
                 switchInt = int.Parse(tempStr);//parsing int to get a valid input
+                Console.WriteLine("");
 
                 //following switch case used to set what unit an ingredient is stored as
                 switch (switchInt) //Units Used for measuring are, ml, litre, TeaSpoon, TableSpoon, OZ, Cup, Quart, Pint, Gallon, other
@@ -413,10 +419,11 @@
                 }
                 tempDouble = double.Parse(tempStr);
                 amount[i] = tempDouble;
+                Console.WriteLine("--------------------------------------------------------------------");
             }
 
-            
 
+            Console.WriteLine("");
             for (int i = 0; i < rl.getNumStep(); i++)//used to enter info to describe each step
             {
                 counter = i + 1;
@@ -441,9 +448,7 @@
 
             Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("");
-            Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
-            Console.WriteLine("");
-
+     
             menuMain();
 
         }
