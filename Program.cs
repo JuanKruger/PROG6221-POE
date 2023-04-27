@@ -1,7 +1,7 @@
 ﻿namespace Prog6221POE
 {
     /*
-     * Version (NF)0.12 NonFunctional  
+     * Version (NF)0.13 NonFunctional  
      * 
      * 
      * Internal dev notes
@@ -41,10 +41,12 @@
             string tempStr;// temporary variable
             int switchInt;// used to control a switch
 
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Clearing The Recipe Means That You Will No Longer Be Able To Access It!!!!");
             Console.WriteLine("Please Confirm Action: Clear Stored Data And Enter New Recipe");
+            Console.ForegroundColor = ConsoleColor.White;        
             Console.WriteLine("1. Clear And Enter New Data");
-            Console.WriteLine("2. Dont Clear, Return To Main Menu");
+            Console.WriteLine("2. Dont Clear, Return To Main Menu");           
             Console.WriteLine("");
 
             tempStr = Console.ReadLine().Trim();
