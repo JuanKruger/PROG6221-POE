@@ -1,19 +1,9 @@
 ﻿namespace Prog6221POE
 {
-    /*
-     * Version 0.15 Functional  
-     * 
-     * 
-     * Internal dev notes
-    * 
-    * Units Used for measuring are, ml, litre, TeaSpoon, TableSpoon, OZ, Cup, Quart, Pint, Gallon
-    *
-    *add display method
-    *test data entry
-    */
+    //version 1.0
     public class RecipeMachine_driver//main method and related items
     {
-        public static void Main(string [] args)
+        public static void Main(string[] args)
         {
             RecipeMachine rm = new RecipeMachine();
             rm.Run();
@@ -44,9 +34,9 @@
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Clearing The Recipe Means That You Will No Longer Be Able To Access It!!!!");
             Console.WriteLine("Please Confirm Action: Clear Stored Data And Enter New Recipe");
-            Console.ForegroundColor = ConsoleColor.White;        
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("1. Clear And Enter New Data");
-            Console.WriteLine("2. Dont Clear, Return To Main Menu");           
+            Console.WriteLine("2. Dont Clear, Return To Main Menu");
             Console.WriteLine("");
 
             tempStr = Console.ReadLine().Trim();
@@ -133,7 +123,7 @@
             string tempStr;// temporary variable
             int switchInt;// used to control a switch
 
-            Console.WriteLine("Please Choose One Of The Following Options"); 
+            Console.WriteLine("Please Choose One Of The Following Options");
             Console.WriteLine("1. Scale");
             Console.WriteLine("2. Reset To Original Scale");
             Console.WriteLine("3. Revert To Main Menu");
@@ -205,7 +195,7 @@
             units = rl.getUnitMeasured();
             stepDescript = rl.getStepDescrip();
             amount = rl.getUnitAmount();
-            
+
             menuMain();
         }
         private void scaleItem()
@@ -272,15 +262,13 @@
             double tempDouble; // temporary variable, will be overwritten multiple times
             int counter; //used where i need some source of counter
             int switchInt; // used to opperate the switch case 
-            
-
 
             //prompt user, the cast the answer into the format needed
             Console.WriteLine("Please Enter The Amount Of Ingredients In This Recipe");
             tempStr = Console.ReadLine().Trim();
             if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 99))
             {
-                while(!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 99))
+                while (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 99))
                 {
                     Console.WriteLine("Invalid Number Format Entered");
                     Console.WriteLine("Please Ensure That Only Numbers Are Entered");
@@ -290,7 +278,7 @@
             tempInt = int.Parse(tempStr);
             rl.setNumIngredients(tempInt);
             Console.WriteLine("");
-            
+
             //prompt user, the cast the answer into the format needed
             Console.WriteLine("Please Enter The Amount Of Steps In This Recipe");
             tempStr = Console.ReadLine().Trim();
@@ -300,7 +288,7 @@
                 {
                     Console.WriteLine("Invalid Number Format Entered");
                     Console.WriteLine("Please Ensure That Only Numbers Are Entered");
-                    tempStr= Console.ReadLine().Trim();
+                    tempStr = Console.ReadLine().Trim();
                 }
             }
             tempInt = int.Parse(tempStr);
@@ -422,7 +410,6 @@
                 Console.WriteLine("--------------------------------------------------------------------");
             }
 
-
             Console.WriteLine("");
             for (int i = 0; i < rl.getNumStep(); i++)//used to enter info to describe each step
             {
@@ -448,9 +435,8 @@
 
             Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("");
-     
-            menuMain();
 
+            menuMain();
         }
     }
     public class InputChecker// class used to store methods for checking if an input is valid
@@ -500,7 +486,7 @@
             Console.WriteLine("Please ensure that the number falls within the accepted range");
             Console.ForegroundColor = ConsoleColor.White;
             return false;
-            
+
         }
         public bool validInput(string str)//checking if string is null or
         {
@@ -535,10 +521,8 @@
                 return false;
             }
             return true;
-            
         }
     }
-
     //Scaler Does not have the required functionallity, but is suitible for now
     public class ScaleConvert //used to scale and convert the units measured
     {//will possible be called ony at time of display
@@ -548,10 +532,9 @@
             {
                 amount[i] = amount[i] * factor;
             }
-            return amount; 
+            return amount;
         }
     }
-
     public class RecipeList//used to set,store and get details for the recipe/steps
     {
         //declarations
@@ -633,7 +616,7 @@
             return stepDescrip;
         }
         //setter to set step description
-       public void setStepDescrip(string[] descrip)
+        public void setStepDescrip(string[] descrip)
         {
             int temp = 0; // temporary variable
             foreach (string str in descrip)
@@ -643,5 +626,4 @@
             }
         }
     }
-    
 }
