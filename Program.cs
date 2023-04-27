@@ -1,7 +1,7 @@
 ﻿namespace Prog6221POE
 {
     /*
-     * Version (NF)0.10 NonFunctional  
+     * Version (NF)0.11 NonFunctional  
      * 
      * 
      * Internal dev notes
@@ -34,7 +34,6 @@
         public void Run()//runs through all relevant methods
         {
             dataEntry();
-            menuMain();
         }
         private void menuConfirmClearAndReEnter()//Confirmation for data reEntry
         {
@@ -46,6 +45,7 @@
             Console.WriteLine("Please Confirm Action: Clear Stored Data And Enter New Recipe");
             Console.WriteLine("1. Clear And Enter New Data");
             Console.WriteLine("2. Dont Clear, Return To Main Menu");
+            Console.WriteLine("");
 
             tempStr = Console.ReadLine().Trim();
             if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 2))
@@ -102,7 +102,7 @@
             {
                 case 1:// display data
                     {
-                        dataEntry();
+                        dataDisplay();
                         break;
                     }
                 case 2:// clear and enter new data
@@ -110,9 +110,56 @@
                         menuConfirmClearAndReEnter();
                         break;
                     }
-                case 3:// exit
+                case 3:
+                    {
+                        menuScaleConvert();
+                        break;
+                    }
+                case 4:// exit
                     {
                         Environment.Exit(0);
+                        break;
+                    }
+            }
+        }
+        private void menuScaleConvert()//allow for going through several diffrent items and selecting items
+        {
+            //variable declaration
+            string tempStr;// temporary variable
+            int switchInt;// used to control a switch
+
+            Console.WriteLine("Please Choose One Of The Following Options"); 
+            Console.WriteLine("1. Scale");
+            Console.WriteLine("2. Reset To Original Scale");
+            Console.WriteLine("3. Revert To Main Menu");
+            Console.WriteLine("");
+            tempStr = Console.ReadLine().Trim();
+            if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 3))
+            {
+                while (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 3))
+                {
+                    Console.WriteLine("Invalid Number Format Entered");
+                    Console.WriteLine("Please Ensure That Only Numbers Are Entered");
+                    tempStr = Console.ReadLine().Trim();
+                }
+            }
+            switchInt = int.Parse(tempStr);//parsing int to get a valid input
+
+            switch (switchInt)
+            {
+                case 1:
+                    {
+                        scaleItem();
+                        break;
+                    }
+                case 2:
+                    {
+                        resetChange();
+                        break;
+                    }
+                case 3:
+                    {
+                        menuMain();
                         break;
                     }
             }
@@ -144,6 +191,37 @@
                     }
             }
         }
+        private void resetChange()
+        {
+            ingredients = rl.getIngredients();
+            units = rl.getUnitMeasured();
+            stepDescript = rl.getStepDescrip();
+            amount = rl.getUnitAmount();
+            
+            menuMain();
+        }
+        private void scaleItem()
+        {
+            //var declaration
+            double factor; //scale factor
+            string tempStr;// temporary string var
+
+            Console.WriteLine("Please Enter The Scale Factor");//data entry for entering ingredients
+            tempStr = Console.ReadLine().Trim();
+            if (!check.doubleInput(tempStr))
+            {
+                while (!check.doubleInput(tempStr))
+                {
+                    Console.WriteLine("Invalid Number Format Entered");
+                    Console.WriteLine("Please Ensure That Only Numbers Are Entered");
+                    tempStr = Console.ReadLine().Trim();
+                }
+            }
+            factor = double.Parse(tempStr);
+
+            sc.scaleIngredient(amount, factor, rl.getNumIngredients());
+            menuMain();
+        }
         private void dataDisplay()// not final display method, only for testing
         {
             int counter; //used where i need some source of counter
@@ -171,6 +249,7 @@
                 Console.WriteLine("Step {0}:", counter);
                 Console.WriteLine(stepDescript[i]);
             }
+            menuMain();
         }
         private void dataEntry() //used to call methods in order for the data entry
         {
@@ -310,9 +389,9 @@
 
                 Console.WriteLine("Please Enter The Amount Of Ingredient");//data entry for entering ingredients
                 tempStr = Console.ReadLine().Trim();
-                if (!check.validInput(tempStr))
+                if (!check.doubleInput(tempStr))
                 {
-                    while (!check.validInput(tempStr))
+                    while (!check.doubleInput(tempStr))
                     {
                         Console.WriteLine("Invalid Number Format Entered");
                         Console.WriteLine("Please Ensure That Only Numbers Are Entered");
@@ -346,6 +425,8 @@
             rl.setUnitMeasured(units);
             rl.setUnitAmount(amount);
             rl.setStepDescrip(stepDescript);
+
+            menuMain();
 
         }
     }
