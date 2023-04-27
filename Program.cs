@@ -1,7 +1,7 @@
 ﻿namespace Prog6221POE
 {
     /*
-     * Version (NF)0.7 NonFunctional  
+     * Version (NF)0.9 NonFunctional  
      * 
      * 
      * Internal dev notes
@@ -24,6 +24,13 @@
         private RecipeList rl = new RecipeList();//rl stands for recipe list
         private Scaler scl = new Scaler(); //scl short for scaler
         InputChecker check = new InputChecker();// checking if input is in an acceptable format
+
+        //declaration of arrays
+        private string[] ingredients = new string[99];
+        private string[] units = new string[99];
+        private string[] stepDescript = new string[99];
+        private double[] amount = new double[99];
+
         public void Run()//runs through all relevant methods
         {
             dataEntry();
@@ -31,11 +38,6 @@
         }
         private void dataDisplay()// not final display method, only for testing
         {
-            //getting arrays containing the data
-            string[] ingredients = rl.getIngredients();
-            string[] units = rl.getUnitMeasured();
-            string[] stepDescript = rl.getStepDescrip();
-            double[] amount = rl.getUnitAmount();
             int counter; //used where i need some source of counter
 
             //information about the recipe
@@ -45,8 +47,14 @@
             Console.WriteLine("The Following Are The Ingredients and the amounts Needed");
             for (int i = 0; i < rl.getNumIngredients(); i++)
             {
+                Console.WriteLine("Ingredients");
+                Console.WriteLine("Ingredient" + ingredients[i]);
+                Console.WriteLine("amount" + amount[i]);
+                Console.WriteLine("Unit" + units[i]);
+
+
                 counter = i + 1;
-                Console.WriteLine("Ingredient {0}: {1} {2}{3}", counter, ingredients[i], amount[i], units[i]);
+                Console.WriteLine("Ingredient " + counter + ": " + ingredients[i] + "  " + amount[i] + units[i]);//, counter, ingredients[i], amount[i], units[i]
             }
             Console.WriteLine("Here Are The Steps For The Recipe");
             for (int i = 0; i < rl.getNumStep(); i++)
@@ -64,11 +72,7 @@
             double tempDouble; // temporary variable, will be overwritten multiple times
             int counter; //used where i need some source of counter
             int switchInt; // used to opperate the switch case 
-            //declaration of arrays
-            string[] ingredients = new string[99];
-            string[] units = new string[99];
-            string[] stepDescript = new string[99];
-            double[] amount = new double[99];
+            
 
 
             //prompt user, the cast the answer into the format needed
@@ -110,7 +114,8 @@
                 tempStr = Console.ReadLine().Trim();
                 if (!check.notNullInput(tempStr))
                 {
-                    while (!check.notNullInput(tempStr));
+                    Console.ReadKey();
+                    while (!check.notNullInput(tempStr))
                     {
                         Console.WriteLine("Please Enter The Name Of The Ingredient, Please don't leave it empty");
                         tempStr = Console.ReadLine();
@@ -119,6 +124,16 @@
                 ingredients[i] = tempStr; //adding to local array, setting it on the setter array after all data entry is complete
 
                 Console.WriteLine("Please Select The Unit Used To measure the ingredient");//gives several options, of bakeing units
+                Console.WriteLine("1. Millilitre");
+                Console.WriteLine("2. Litre");
+                Console.WriteLine("3. Teaspoon");
+                Console.WriteLine("4. Tablespoon");
+                Console.WriteLine("5. Fluid Ounce(oz)");
+                Console.WriteLine("6. Cup");
+                Console.WriteLine("7. Quart");
+                Console.WriteLine("8. Pint");
+                Console.WriteLine("9. Gallon");
+
                 tempStr = Console.ReadLine().Trim();
                 if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 9))
                 {
@@ -134,47 +149,47 @@
                 //following switch case used to set what unit an ingredient is stored as
                 switch (switchInt) //Units Used for measuring are, ml, litre, TeaSpoon, TableSpoon, OZ, Cup, Quart, Pint, Gallon, other
                 {
-                    case 0:
-                        {
-                            units[i] = "ml";//milli-litre
-                            break;
-                        }
                     case 1:
                         {
-                            units[i] = "L";//litre
+                            units[i] = "ml";//millilitre
                             break;
                         }
                     case 2:
                         {
-                            units[i] = "Teaspoon";
+                            units[i] = "L";//litre
                             break;
                         }
                     case 3:
                         {
-                            units[i] = "Tablespoon";
+                            units[i] = "Teaspoon";
                             break;
                         }
                     case 4:
                         {
-                            units[i] = "OZ";//Fluid Ounce
+                            units[i] = "Tablespoon";
                             break;
                         }
                     case 5:
                         {
-                            units[i] = "Cup";
+                            units[i] = "OZ";//Fluid Ounce
                             break;
                         }
                     case 6:
                         {
-                            units[i] = "Quart";
+                            units[i] = "Cup";
                             break;
                         }
                     case 7:
                         {
-                            units[i] = "Pint";
+                            units[i] = "Quart";
                             break;
                         }
                     case 8:
+                        {
+                            units[i] = "Pint";
+                            break;
+                        }
+                    case 9:
                         {
                             units[i] = "Gallon";
                             break;
@@ -292,7 +307,7 @@
             catch (Exception e)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("INVALID CHARACTER INPUT ERROR");
+                Console.WriteLine("INVALID CHARACTER INPUT ERROR #3");
                 Console.ForegroundColor = ConsoleColor.White;
                 return false;
             }
@@ -307,10 +322,8 @@
                 Console.ForegroundColor = ConsoleColor.White;
                 return false;
             }
-            else
-            {
-                return true;
-            }
+            return true;
+            
         }
     }
 
@@ -380,7 +393,7 @@
             int temp = 0; // temporary variable
             foreach (string str in units)
             {
-                ingredients[temp] = str;
+                unitMeasured[temp] = str;
                 temp++;
             }
         }
