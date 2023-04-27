@@ -1,7 +1,7 @@
 ﻿namespace Prog6221POE
 {
     /*
-     * Version (NF)0.11 NonFunctional  
+     * Version (NF)0.12 NonFunctional  
      * 
      * 
      * Internal dev notes
@@ -85,6 +85,9 @@
             Console.WriteLine("2. Clear And Enter New Recipe");
             Console.WriteLine("3. Scale Recipe Or Reset Recipe Scale");
             Console.WriteLine("4. Exit Application");
+            Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("");
+            Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("");
             tempStr = Console.ReadLine().Trim();
             if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 4))
@@ -132,6 +135,9 @@
             Console.WriteLine("1. Scale");
             Console.WriteLine("2. Reset To Original Scale");
             Console.WriteLine("3. Revert To Main Menu");
+            Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("");
+            Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("");
             tempStr = Console.ReadLine().Trim();
             if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 3))
@@ -207,6 +213,10 @@
             string tempStr;// temporary string var
 
             Console.WriteLine("Please Enter The Scale Factor");//data entry for entering ingredients
+            Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("");
+            Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("");
             tempStr = Console.ReadLine().Trim();
             if (!check.doubleInput(tempStr))
             {
@@ -220,6 +230,7 @@
             factor = double.Parse(tempStr);
 
             sc.scaleIngredient(amount, factor, rl.getNumIngredients());
+
             menuMain();
         }
         private void dataDisplay()// not final display method, only for testing
@@ -249,6 +260,11 @@
                 Console.WriteLine("Step {0}:", counter);
                 Console.WriteLine(stepDescript[i]);
             }
+            Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("");
+            Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("");
+
             menuMain();
         }
         private void dataEntry() //used to call methods in order for the data entry
@@ -425,6 +441,11 @@
             rl.setUnitMeasured(units);
             rl.setUnitAmount(amount);
             rl.setStepDescrip(stepDescript);
+
+            Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("");
+            Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("");
 
             menuMain();
 
