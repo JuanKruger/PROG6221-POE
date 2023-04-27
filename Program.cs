@@ -1,7 +1,7 @@
 ﻿namespace Prog6221POE
 {
     /*
-     * Version (NF)0.9 NonFunctional  
+     * Version (NF)0.10 NonFunctional  
      * 
      * 
      * Internal dev notes
@@ -22,7 +22,7 @@
     public class RecipeMachine
     {
         private RecipeList rl = new RecipeList();//rl stands for recipe list
-        private Scaler scl = new Scaler(); //scl short for scaler
+        private ScaleConvert sc = new ScaleConvert(); //sc short for scaleConvert
         InputChecker check = new InputChecker();// checking if input is in an acceptable format
 
         //declaration of arrays
@@ -34,7 +34,115 @@
         public void Run()//runs through all relevant methods
         {
             dataEntry();
-            dataDisplay();// only in basic implementation for testing purposes
+            menuMain();
+        }
+        private void menuConfirmClearAndReEnter()//Confirmation for data reEntry
+        {
+            //variable declaration
+            string tempStr;// temporary variable
+            int switchInt;// used to control a switch
+
+            Console.WriteLine("Clearing The Recipe Means That You Will No Longer Be Able To Access It!!!!");
+            Console.WriteLine("Please Confirm Action: Clear Stored Data And Enter New Recipe");
+            Console.WriteLine("1. Clear And Enter New Data");
+            Console.WriteLine("2. Dont Clear, Return To Main Menu");
+
+            tempStr = Console.ReadLine().Trim();
+            if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 2))
+            {
+                while (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 2))
+                {
+                    Console.WriteLine("Invalid Number Format Entered");
+                    Console.WriteLine("Please Ensure That Only Numbers Are Entered");
+                    tempStr = Console.ReadLine().Trim();
+                }
+            }
+            switchInt = int.Parse(tempStr);//parsing int to get a valid input
+
+            switch (switchInt)
+            {
+                case 1:
+                    {
+                        dataEntry();
+                        break;
+                    }
+                case 2:
+                    {
+                        menuMain();
+                        break;
+                    }
+            }
+        }
+        //MainMenu
+        private void menuMain()//allow for going through several diffrent items and selecting items
+        {
+            //variable declaration
+            string tempStr;// temporary variable
+            int switchInt;// used to control a switch
+
+            Console.WriteLine("Please Select One Of The Following Option");
+            Console.WriteLine("1. Display Stored Recipe");
+            Console.WriteLine("2. Clear And Enter New Recipe");
+            Console.WriteLine("3. Scale Recipe Or Reset Recipe Scale");
+            Console.WriteLine("4. Exit Application");
+            Console.WriteLine("");
+            tempStr = Console.ReadLine().Trim();
+            if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 4))
+            {
+                while (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 4))
+                {
+                    Console.WriteLine("Invalid Number Format Entered");
+                    Console.WriteLine("Please Ensure That Only Numbers Are Entered");
+                    tempStr = Console.ReadLine().Trim();
+                }
+            }
+            switchInt = int.Parse(tempStr);//parsing int to get a valid input
+
+            switch (switchInt)
+            {
+                case 1:// display data
+                    {
+                        dataEntry();
+                        break;
+                    }
+                case 2:// clear and enter new data
+                    {
+                        menuConfirmClearAndReEnter();
+                        break;
+                    }
+                case 3:// exit
+                    {
+                        Environment.Exit(0);
+                        break;
+                    }
+            }
+        }
+        private void menuBLANK()//allow for going through several diffrent items and selecting items
+        {
+            //variable declaration
+            string tempStr;// temporary variable
+            int switchInt;// used to control a switch
+
+
+            tempStr = Console.ReadLine().Trim();
+            if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 3))
+            {
+                while (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 3))
+                {
+                    Console.WriteLine("Invalid Number Format Entered");
+                    Console.WriteLine("Please Ensure That Only Numbers Are Entered");
+                    tempStr = Console.ReadLine().Trim();
+                }
+            }
+            switchInt = int.Parse(tempStr);//parsing int to get a valid input
+
+            switch (switchInt)
+            {
+                case 1:
+                    {
+                        break;
+                    }
+            }
         }
         private void dataDisplay()// not final display method, only for testing
         {
@@ -328,11 +436,14 @@
     }
 
     //Scaler Does not have the required functionallity, but is suitible for now
-    public class Scaler //used to scale the units measured
+    public class ScaleConvert //used to scale and convert the units measured
     {//will possible be called ony at time of display
-        public double scaleIngredient(double scaleUnit, double amount)//scaleUnit = what the recipe is scalled by, amount = amount of ingredient
+        public double[] scaleIngredient(double[] amount, double factor, int numItems)//amount is the array for the full amount, factor is the scale factor, numItems = number of items to scale
         {
-            amount = amount * scaleUnit;
+            for (int i = 0; i < numItems; i++)
+            {
+                amount[i] = amount[i] * factor;
+            }
             return amount; 
         }
     }
