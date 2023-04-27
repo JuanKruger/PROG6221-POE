@@ -9,6 +9,8 @@
     * 
     * currently working on
     * storing info on ingredients line 69, use loops, working on ingredient name
+    * 
+    * Units Used for measuring are, ml, litre, TeaSpoon, TableSpoon, OZ, Cup, Quart, Pint, Gallon
     *
     *
     *
@@ -36,20 +38,22 @@
             //declaration for varibles only used inside the class
             string tempStr; //temporary variable, will be overwritten multiple times
             int tempInt;  //temporary variable, will be overwritten multiple times
+            double tempDouble; // temporary variable, will be overwritten multiple times
+            int counter; //used where i need some source of counter
             int switchInt; // used to opperate the switch case 
             //declaration of arrays
-            string[] ingredients = new string[20];
-            string[] units = new string[20];
-            string[] stepDescript = new string[20];
-            double[] amount = new double[20];
+            string[] ingredients = new string[99];
+            string[] units = new string[99];
+            string[] stepDescript = new string[99];
+            double[] amount = new double[99];
 
 
             //prompt user, the cast the answer into the format needed
             Console.WriteLine("Please Enter The Amount Of Ingredients In This Recipe");
             tempStr = Console.ReadLine().Trim();
-            if (!check.validInput(tempStr))
+            if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 99))
             {
-                while(!check.validInput(tempStr))
+                while(!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 99))
                 {
                     Console.WriteLine("Invalid Number Format Entered");
                     Console.WriteLine("Please Ensure That Only Numbers Are Entered");
@@ -62,9 +66,9 @@
             //prompt user, the cast the answer into the format needed
             Console.WriteLine("Please Enter The Amount Of Steps In This Recipe");
             tempStr = Console.ReadLine().Trim();
-            if (!check.validInput(tempStr))
+            if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 99))
             {
-                while (!check.validInput(tempStr))
+                while (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 99))
                 {
                     Console.WriteLine("Invalid Number Format Entered");
                     Console.WriteLine("Please Ensure That Only Numbers Are Entered");
@@ -77,7 +81,8 @@
             //propmt user to enter info on ingredients, ie name, unit and amount used
             for (int i = 0; i < rl.getNumIngredients(); i++)
             {
-                Console.WriteLine("Please Enter Information On The Ingredient for the following parameters             Ingredient{0}/{1}", i, rl.getNumIngredients());
+                counter = i + 1;
+                Console.WriteLine("Please Enter Information On The Ingredient for the following parameters             Ingredient{0}/{1}", counter, rl.getNumIngredients());
                 Console.WriteLine("Please enter the Ingredients Name");
                 tempStr = Console.ReadLine().Trim();
                 if (!check.notNullInput(tempStr))
@@ -92,9 +97,9 @@
 
                 Console.WriteLine("Please Select The Unit Used To measure the ingredient");//gives several options, of bakeing units
                 tempStr = Console.ReadLine().Trim();
-                if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 10))
+                if (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 9))
                 {
-                    while (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 10))
+                    while (!check.validInput(tempStr) || !check.intConstricCheck(tempStr, 1, 9))
                     {
                         Console.WriteLine("Invalid Number Format Entered");
                         Console.WriteLine("Please Ensure That Only Numbers Are Entered");
@@ -103,82 +108,125 @@
                 }
                 switchInt = int.Parse(tempStr);//parsing int to get a valid input
 
-
-                switch (switchInt)
+                //following switch case used to set what unit an ingredient is stored as
+                switch (switchInt) //Units Used for measuring are, ml, litre, TeaSpoon, TableSpoon, OZ, Cup, Quart, Pint, Gallon, other
                 {
                     case 0:
                         {
-                            // Code to execute for option 0
+                            units[i] = "ml";//milli-litre
                             break;
                         }
                     case 1:
                         {
-                            // Code to execute for option 1
+                            units[i] = "L";//litre
                             break;
                         }
                     case 2:
                         {
-                            // Code to execute for option 2
+                            units[i] = "Teaspoon";
                             break;
                         }
                     case 3:
                         {
-                            // Code to execute for option 3
+                            units[i] = "Tablespoon";
                             break;
                         }
                     case 4:
                         {
-                            // Code to execute for option 4
+                            units[i] = "OZ";//Fluid Ounce
                             break;
                         }
                     case 5:
                         {
-                            // Code to execute for option 5
+                            units[i] = "Cup";
                             break;
                         }
                     case 6:
                         {
-                            // Code to execute for option 6
+                            units[i] = "Quart";
                             break;
                         }
                     case 7:
                         {
-                            // Code to execute for option 7
+                            units[i] = "Pint";
                             break;
                         }
                     case 8:
                         {
-                            // Code to execute for option 8
-                            break;
-                        }
-                    case 9:
-                        {
-                            // Code to execute for option 9
+                            units[i] = "Gallon";
                             break;
                         }
                     default:
                         {
-                            // Code to execute if no case matches
                             break;
                         }
                 }
 
+                Console.WriteLine("Please Enter The Amount Of Ingredient");//data entry for entering ingredients
+                tempStr = Console.ReadLine().Trim();
+                if (!check.validInput(tempStr))
+                {
+                    while (!check.validInput(tempStr))
+                    {
+                        Console.WriteLine("Invalid Number Format Entered");
+                        Console.WriteLine("Please Ensure That Only Numbers Are Entered");
+                        tempStr = Console.ReadLine().Trim();
+                    }
+                }
+                tempDouble = double.Parse(tempStr);
+                amount[i] = tempDouble;
             }
+
+            
 
             for (int i = 0; i < rl.getNumStep(); i++)//used to enter info to describe each step
             {
-
+                counter = i + 1;
+                Console.WriteLine("Please Enter The Description For Step {0}.", counter);
+                tempStr = Console.ReadLine();
+                if (!check.notNullInput(tempStr))
+                {
+                    while (!check.notNullInput(tempStr))
+                    {
+                        Console.WriteLine("Blank Input Detected, Please Enter The Step Description For Step {0}", counter);
+                        tempStr = Console.ReadLine();
+                    }
+                }
+                stepDescript[i] = tempStr;
             }
-            //adding methods that set null for now, just to ensure i remember to implement them/easy refrence
-            //rl.setIngredient(null);//null value, replace with output
-            //rl.setUnitMeasured(null);
-            //rl.setUnitAmount(null);
-            //rl.setStepDescrip(null);
+
+            //Storing data from the arrays for later acces
+            rl.setIngredient(ingredients);
+            rl.setUnitMeasured(units);
+            rl.setUnitAmount(amount);
+            rl.setStepDescrip(stepDescript);
 
         }
     }
-    public class InputChecker
+    public class InputChecker// class used to store methods for checking if an input is valid
     {
+        public bool doubleInput(string str)// checks if input is a double
+        {
+            if (string.IsNullOrEmpty(str))//null input check
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("NULL INPUT ERROR");
+                Console.ForegroundColor = ConsoleColor.White;
+                return false;
+            }
+            try
+            {
+                double.Parse(str);
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("NON VALID INPUT, ENSURE THAT YOU HAVE ONLY ENTERED A NUMBER, ELSE CHECK THAT YOU USED A VALID DECIMAL CHARACTER");
+                Console.ForegroundColor = ConsoleColor.White;
+                return false;
+            }
+            return true;
+        }
         public bool intConstricCheck(string valSTR, int a, int b)//valSTR is the value being checked, a and b are the constraints, a is the lower bound while b is upper
         {
             int c = a - 1;// reasignment done to provide upper and lower bounds
@@ -258,10 +306,10 @@
         //declarations
         private int numStep; // number of steps
         private int numIngredients; // number of ingredients
-        private string[] ingredients = new string[20]; //list of ingredients
-        private string[] unitMeasured = new string[20]; // descriptor of the measurment unit
-        private double[] amount = new double[20]; //the amount of ingredient
-        private string[] stepDescrip = new string[20];
+        private string[] ingredients = new string[99]; //list of ingredients
+        private string[] unitMeasured = new string[99]; // descriptor of the measurment unit
+        private double[] amount = new double[99]; //the amount of ingredient
+        private string[] stepDescrip = new string[99];
 
         //getter for the number of steps
         public int getNumStep()
