@@ -1,7 +1,7 @@
 ﻿namespace Prog6221POE
 {
     /*
-     * Version (NF)0.13 NonFunctional  
+     * Version 0.14 Functional  
      * 
      * 
      * Internal dev notes
@@ -243,15 +243,10 @@
             Console.WriteLine("The following information is about the Recipe");
             Console.WriteLine("The Number of Steps In This Recipe Is {0}", rl.getNumStep());
             Console.WriteLine("There Are {0} Ingredients", rl.getNumIngredients());
+            Console.WriteLine("");
             Console.WriteLine("The Following Are The Ingredients and the amounts Needed");
             for (int i = 0; i < rl.getNumIngredients(); i++)
             {
-                Console.WriteLine("Ingredients");
-                Console.WriteLine("Ingredient" + ingredients[i]);
-                Console.WriteLine("amount" + amount[i]);
-                Console.WriteLine("Unit" + units[i]);
-
-
                 counter = i + 1;
                 Console.WriteLine("Ingredient " + counter + ": " + ingredients[i] + "  " + amount[i] + units[i]);//, counter, ingredients[i], amount[i], units[i]
             }
