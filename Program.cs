@@ -1,20 +1,15 @@
 ﻿namespace Prog6221POE
 {
     /*
-     * Version (NF)0.5 NonFunctional  
+     * Version (NF)0.7 NonFunctional  
      * 
      * 
      * Internal dev notes
-    *
-    * 
-    * currently working on
-    * storing info on ingredients line 69, use loops, working on ingredient name
     * 
     * Units Used for measuring are, ml, litre, TeaSpoon, TableSpoon, OZ, Cup, Quart, Pint, Gallon
     *
-    *
-    *
-    *
+    *add display method
+    *test data entry
     */
     public class RecipeMachine_driver//main method and related items
     {
@@ -32,6 +27,34 @@
         public void Run()//runs through all relevant methods
         {
             dataEntry();
+            dataDisplay();// only in basic implementation for testing purposes
+        }
+        private void dataDisplay()// not final display method, only for testing
+        {
+            //getting arrays containing the data
+            string[] ingredients = rl.getIngredients();
+            string[] units = rl.getUnitMeasured();
+            string[] stepDescript = rl.getStepDescrip();
+            double[] amount = rl.getUnitAmount();
+            int counter; //used where i need some source of counter
+
+            //information about the recipe
+            Console.WriteLine("The following information is about the Recipe");
+            Console.WriteLine("The Number of Steps In This Recipe Is {0}", rl.getNumStep());
+            Console.WriteLine("There Are {0} Ingredients", rl.getNumIngredients());
+            Console.WriteLine("The Following Are The Ingredients and the amounts Needed");
+            for (int i = 0; i < rl.getNumIngredients(); i++)
+            {
+                counter = i + 1;
+                Console.WriteLine("Ingredient {0}: {1} {2}{3}", counter, ingredients[i], amount[i], units[i]);
+            }
+            Console.WriteLine("Here Are The Steps For The Recipe");
+            for (int i = 0; i < rl.getNumStep(); i++)
+            {
+                counter = i + 1;
+                Console.WriteLine("Step {0}:", counter);
+                Console.WriteLine(stepDescript[i]);
+            }
         }
         private void dataEntry() //used to call methods in order for the data entry
         {
@@ -332,7 +355,7 @@
             numIngredients = numberOfIngredients;
         }
         //getter method to fetch the ingredients list
-        public string[] getIngredients(int x)
+        public string[] getIngredients()
         {
             return ingredients;
         }
