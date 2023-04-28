@@ -1,6 +1,6 @@
 ﻿namespace Prog6221POE
 {
-    //version 1.0
+    //version 1.1
     public class RecipeMachine_driver//main method and related items
     {
         public static void Main(string[] args)
@@ -196,7 +196,7 @@
             stepDescript = rl.getStepDescrip();
             amount = rl.getUnitAmount();
 
-            menuMain();
+            dataDisplay();
         }
         private void scaleItem()
         {
@@ -223,7 +223,7 @@
 
             sc.scaleIngredient(amount, factor, rl.getNumIngredients());
 
-            menuMain();
+            dataDisplay();
         }
         private void dataDisplay()// not final display method, only for testing
         {
