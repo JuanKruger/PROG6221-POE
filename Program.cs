@@ -1,6 +1,15 @@
 ﻿namespace Prog6221POE
 {
-    //version 1.1
+    //version 1.2b
+    /*
+     * TO DO
+     * Multiple named Recipies
+     * Display recipies in alphabetical order
+     * Calorie calculations with delegate to notify when over 300
+     * 
+     * Currnet tasks, Storage System Renovations, making changes to allow you to have multiple recipies
+     * added code to pakage data into a single string for easer handeling, not tested or implemented
+     */
     public class RecipeMachine_driver//main method and related items
     {
         public static void Main(string[] args)
@@ -533,6 +542,39 @@
                 amount[i] = amount[i] * factor;
             }
             return amount;
+        }
+    }
+    public class Compacter//used to set,store and get details for the recipe/steps
+    /*
+     * String Header: name, num steps, num Ingerdients, (fixed Length)
+     * String Body Section A: ingredent, amount, unit measured, calories, ingredeint, amount, unit measured, calories,...,(variable length repeating structure)
+     * String body Section B: step description (variable length, repeating item)
+     * 
+     * using ◙ to separate the strings
+     */
+    {
+        public string stringCompress(string recipeName, int numStep, int numIngredients, string[] ingredients, string[] unitMeasured, double[] amount, int[] calorie, string[] stepDescrip)
+        {
+            string stringComp;//string comp is used to construct the recipie storage, ◙ is used to indicate end of string, ◙ was chosen as it is not likely to be used by a users
+            string tempSTR = ""; //temporary string
+
+            stringComp = recipeName + "◙" + numStep + "◙" + numIngredients + "◙"; //header section of string
+
+            //string body section A
+            for (int i = 0; i < numIngredients; i++)
+            {
+                tempSTR = ingredients[i] + "◙" + amount[i] + "◙" + unitMeasured[i] + "◙" + calorie[i] + "◙";
+            }
+
+            stringComp = stringComp + tempSTR; //adding section A to the string
+            tempSTR = "";// clearing for B section manipulations
+
+            for (int i = 0; i < numStep; i++)
+            {
+                tempSTR = tempSTR + stepDescrip[i] + "◙";
+            }
+
+            return stringComp;
         }
     }
     public class RecipeList//used to set,store and get details for the recipe/steps
