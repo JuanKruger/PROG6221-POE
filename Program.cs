@@ -1,6 +1,6 @@
 ﻿namespace Prog6221POE
 {
-    //version 1.2b
+    //version 1.3b
     /*
      * TO DO
      * Multiple named Recipies
@@ -546,24 +546,33 @@
     }
     public class Compacter//used to set,store and get details for the recipe/steps
     /*
-     * String Header: name, num steps, num Ingerdients, (fixed Length)
-     * String Body Section A: ingredent, amount, unit measured, calories, ingredeint, amount, unit measured, calories,...,(variable length repeating structure)
+     * String Header: name, num steps, num Ingerdients, total calories (fixed Length)
+     * String Body Section A: ingredent, amount, unit measured, ingredeint, amount, unit measured,...,(variable length repeating structure)
      * String body Section B: step description (variable length, repeating item)
      * 
      * using ◙ to separate the strings
      */
     {
-        public string stringCompress(string recipeName, int numStep, int numIngredients, string[] ingredients, string[] unitMeasured, double[] amount, int[] calorie, string[] stepDescrip)
+        
+        //variable containing recipe data
+        private string nameRecipe;
+        private int numberSteps, numberIngredients;
+        private double calories;
+        private List<string> ingredientName = new List<string>();
+        private List<string> unitsMeasured = new List<string>();
+        private List<string> stepDescription = new List<string>();
+        private List<double> amountOfIngredient = new List<double>();
+        public string stringCompress(string recipeName, int numStep, int numIngredients, string[] ingredients, string[] unitMeasured, double[] amount, double calorie, string[] stepDescrip)
         {
             string stringComp;//string comp is used to construct the recipie storage, ◙ is used to indicate end of string, ◙ was chosen as it is not likely to be used by a users
             string tempSTR = ""; //temporary string
 
-            stringComp = recipeName + "◙" + numStep + "◙" + numIngredients + "◙"; //header section of string
+            stringComp = recipeName + "◙" + numStep + "◙" + numIngredients + "◙" + calorie + "◙"; //header section of string
 
             //string body section A
             for (int i = 0; i < numIngredients; i++)
             {
-                tempSTR = ingredients[i] + "◙" + amount[i] + "◙" + unitMeasured[i] + "◙" + calorie[i] + "◙";
+                tempSTR = ingredients[i] + "◙" + amount[i] + "◙" + unitMeasured[i] + "◙";
             }
 
             stringComp = stringComp + tempSTR; //adding section A to the string
@@ -576,6 +585,107 @@
 
             return stringComp;
         }
+
+        public void recipeLoad(string compString)//loads string for information extraction
+        {
+            //string that recipeLoad loads
+            string loadedSTR;
+            loadedSTR = compString;
+
+            //variables exclusive to this method
+            char tempChar;//used multiple times for diffrent manipulation
+            int contInt = 0;// control integer for loops
+            string tempSTR = "";// used to build up data that the string manipulation reveals
+
+            //parsing string headers
+            //Extracting recipe name
+            tempChar = loadedSTR[0];
+            while (delimiterCheck(tempChar))
+            {
+                tempSTR = tempSTR + loadedSTR[contInt];
+                contInt++;
+            }
+            contInt++;
+            nameRecipe = tempSTR;
+            tempSTR = "";
+
+            //Extracting number of steps
+            while (delimiterCheck(tempChar))
+            {
+                tempSTR = tempSTR + loadedSTR[contInt];
+                contInt++;
+            }
+            contInt++;
+            numberSteps = int.Parse(tempSTR);
+            tempSTR = "";
+
+            //Extracting number of ingredients
+            while (delimiterCheck(tempChar))
+            {
+                tempSTR = tempSTR + loadedSTR[contInt];
+                contInt++;
+            }
+            contInt++;
+            numberIngredients = int.Parse(tempSTR);
+            tempSTR = "";
+
+            //Extracting Total calories
+            while (delimiterCheck(tempChar))
+            {
+                tempSTR = tempSTR + loadedSTR[contInt];
+                contInt++;
+            }
+            contInt++;
+            calories = double.Parse(tempSTR);
+            tempSTR = "";
+
+            //Parsing string body A
+
+
+        }
+        private bool delimiterCheck(char a)//used to check for the delimeter character
+        {
+            if (a == '◙')
+            {
+                return false;
+            }
+            return true;
+        }
+        //info getters for geting data drom loaded strings
+        public string getRecipeName()
+        {
+            return "";
+        }
+        public int getNumStep()
+        {
+            return 0;
+        }
+        public int getNumIngredients()
+        {
+            return 0;
+        }
+        public string getIngredients()
+        {
+            return "";
+        }
+        public string getUnitMeasured()
+        {
+            return "";
+        }
+        public string getCalories()
+        {
+            return "";
+        }
+        public double getAmount()
+        {
+            return 0;
+        }    
+           
+        public string getStepDescrip()
+        {
+            return "";
+        }
+        
     }
     public class RecipeList//used to set,store and get details for the recipe/steps
     {
