@@ -1,6 +1,6 @@
 ﻿namespace Prog6221POE
 {
-    //version 1.4b
+    //version 1.5b
     /*
      * TO DO
      * Multiple named Recipies
@@ -554,7 +554,8 @@
      * using ◙ to separate the strings
      */
     {
-        
+        //data mass storage
+        private List<string> recipeStore = new List<string>();
         //variable containing recipe data
         private string nameRecipe;
         private int numberSteps, numberIngredients;
@@ -563,6 +564,8 @@
         private List<string> units = new List<string>();
         private List<string> stepDescription = new List<string>();
         private List<double> amountOfIngredient = new List<double>();
+
+        
 
         //info getters for geting data drom loaded strings
         public string getRecipeName()
@@ -598,7 +601,7 @@
         {
             return stepDescription;
         }
-        public string stringCompress(string recipeName, int numStep, int numIngredients, string[] ingredients, string[] unitMeasured, double[] amount, double calorie, string[] stepDescrip)
+        public void stringCompress(string recipeName, int numStep, int numIngredients, string[] ingredients, string[] unitMeasured, double[] amount, double calorie, string[] stepDescrip)
         {
             string stringComp;//string comp is used to construct the recipie storage, ◙ is used to indicate end of string, ◙ was chosen as it is not likely to be used by a users
             string tempSTR = ""; //temporary string
@@ -619,7 +622,8 @@
                 tempSTR = tempSTR + stepDescrip[i] + "◙";
             }
 
-            return stringComp;
+            recipeStore.Add(tempSTR);
+            tempSTR = "";
         }
 
         public void recipeLoad(string compString)//loads string for information extraction
