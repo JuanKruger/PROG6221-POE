@@ -1,14 +1,15 @@
 ﻿namespace Prog6221POE
 {
-    //version 1.3b
+    //version 1.4b
     /*
      * TO DO
      * Multiple named Recipies
      * Display recipies in alphabetical order
      * Calorie calculations with delegate to notify when over 300
      * 
-     * Currnet tasks, Storage System Renovations, making changes to allow you to have multiple recipies
-     * added code to pakage data into a single string for easer handeling, not tested or implemented
+     * added code which allows for the compression of data into a single string object that can be unwrapped to give the all the data back. This is done to make data storage easy
+     * Next itewm to do is fully implement storage as well as recipe retrival
+     * 
      */
     public class RecipeMachine_driver//main method and related items
     {
@@ -559,9 +560,44 @@
         private int numberSteps, numberIngredients;
         private double calories;
         private List<string> ingredientName = new List<string>();
-        private List<string> unitsMeasured = new List<string>();
+        private List<string> units = new List<string>();
         private List<string> stepDescription = new List<string>();
         private List<double> amountOfIngredient = new List<double>();
+
+        //info getters for geting data drom loaded strings
+        public string getRecipeName()
+        {
+            return nameRecipe;
+        }
+        public int getNumStep()
+        {
+            return numberSteps;
+        }
+        public int getNumIngredients()
+        {
+            return numberIngredients;
+        }
+        public List<string> getIngredients()
+        {
+            return ingredientName;
+        }
+        public List<string> getUnitMeasured()
+        {
+            return units;
+        }
+        public double getCalories()
+        {
+            return calories;
+        }
+        public List<double> getAmount()
+        {
+            return amountOfIngredient;
+        }
+
+        public List<string> getStepDescrip()
+        {
+            return stepDescription;
+        }
         public string stringCompress(string recipeName, int numStep, int numIngredients, string[] ingredients, string[] unitMeasured, double[] amount, double calorie, string[] stepDescrip)
         {
             string stringComp;//string comp is used to construct the recipie storage, ◙ is used to indicate end of string, ◙ was chosen as it is not likely to be used by a users
@@ -595,6 +631,7 @@
             //variables exclusive to this method
             char tempChar;//used multiple times for diffrent manipulation
             int contInt = 0;// control integer for loops
+            int tempInt;// temporary intager
             string tempSTR = "";// used to build up data that the string manipulation reveals
 
             //parsing string headers
@@ -640,7 +677,52 @@
             tempSTR = "";
 
             //Parsing string body A
+            tempInt = numberIngredients * 3;
+            for (tempInt = 0; tempInt <= numberIngredients; tempInt++)
+            {
+                //extract ingredient name
+                while (delimiterCheck(tempChar))
+                {
+                    tempSTR = tempSTR + loadedSTR[contInt];
+                    contInt++;
+                }
+                contInt++;
+                ingredientName.Add(tempSTR);
+                tempSTR = "";
 
+                //extract ingredient amount
+                while (delimiterCheck(tempChar))
+                {
+                    tempSTR = tempSTR + loadedSTR[contInt];
+                    contInt++;
+                }
+                contInt++;
+                amountOfIngredient.Add(double.Parse(tempSTR));
+                tempSTR = "";
+
+                //extract ingredient unit
+                while (delimiterCheck(tempChar))
+                {
+                    tempSTR = tempSTR + loadedSTR[contInt];
+                    contInt++;
+                }
+                contInt++;
+                units.Add(tempSTR);
+                tempSTR = "";
+            }
+            //parsing string body b
+            for (tempInt = 0; tempInt <= numberSteps; tempInt++)
+            {
+                //extract step descriptions
+                while (delimiterCheck(tempChar))
+                {
+                    tempSTR = tempSTR + loadedSTR[contInt];
+                    contInt++;
+                }
+                contInt++;
+                stepDescription.Add(tempSTR);
+                tempSTR = "";
+            }
 
         }
         private bool delimiterCheck(char a)//used to check for the delimeter character
@@ -651,41 +733,6 @@
             }
             return true;
         }
-        //info getters for geting data drom loaded strings
-        public string getRecipeName()
-        {
-            return "";
-        }
-        public int getNumStep()
-        {
-            return 0;
-        }
-        public int getNumIngredients()
-        {
-            return 0;
-        }
-        public string getIngredients()
-        {
-            return "";
-        }
-        public string getUnitMeasured()
-        {
-            return "";
-        }
-        public string getCalories()
-        {
-            return "";
-        }
-        public double getAmount()
-        {
-            return 0;
-        }    
-           
-        public string getStepDescrip()
-        {
-            return "";
-        }
-        
     }
     public class RecipeList//used to set,store and get details for the recipe/steps
     {
