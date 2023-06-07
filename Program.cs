@@ -1,14 +1,13 @@
 ﻿namespace Prog6221POE
 {
-    //version 1.5b
+    //version 1.6b
     /*
      * TO DO
      * Multiple named Recipies
      * Display recipies in alphabetical order
      * Calorie calculations with delegate to notify when over 300
      * 
-     * added code which allows for the compression of data into a single string object that can be unwrapped to give the all the data back. This is done to make data storage easy
-     * Next itewm to do is fully implement storage as well as recipe retrival
+     * Ground Up Approach, go resdesign from start, modify input menue then work from there
      * 
      */
     public class RecipeMachine_driver//main method and related items
@@ -21,31 +20,41 @@
     }
     public class RecipeMachine
     {
-        private RecipeList rl = new RecipeList();//rl stands for recipe list
+        private Compacter rl = new Compacter();//rl stands for recipe list
         private ScaleConvert sc = new ScaleConvert(); //sc short for scaleConvert
         InputChecker check = new InputChecker();// checking if input is in an acceptable format
 
-        //declaration of arrays
-        private string[] ingredients = new string[99];
-        private string[] units = new string[99];
-        private string[] stepDescript = new string[99];
-        private double[] amount = new double[99];
-
-        public void Run()//runs through all relevant methods
+         public void Run()//runs through all relevant methods
         {
             dataEntry();
         }
-        private void menuConfirmClearAndReEnter()//Confirmation for data reEntry
+        
+        private void deleteRecipe()//Confirmation for data removal
         {
             //variable declaration
             string tempStr;// temporary variable
             int switchInt;// used to control a switch
+            string itemToDelete;//item to be deleted
+
+            //finding item to delete
+            Console.WriteLine("Please Enter The Name Of The Recipe You Would Like To Delete");
+            tempStr = Console.ReadLine().Trim().ToLower();
+            if (!check.notNullInput(tempStr) || !check.nameCheck(tempStr, rl.recipeNames))
+            {
+                while (!check.notNullInput(tempStr) || !check.nameCheck(tempStr, rl.recipeNames))
+                {
+                    Console.WriteLine("Invalid Input Entered");
+                    Console.WriteLine("Please Ensure That A Real Recipe Was Entered");
+                    tempStr = Console.ReadLine().Trim().ToLower();
+                }
+            }
+            itemToDelete = tempStr;
 
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Clearing The Recipe Means That You Will No Longer Be Able To Access It!!!!");
-            Console.WriteLine("Please Confirm Action: Clear Stored Data And Enter New Recipe");
+            Console.WriteLine("Please Confirm Action: Clear Stored Recipe: {0}", itemToDelete);
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("1. Clear And Enter New Data");
+            Console.WriteLine("1. Clear");
             Console.WriteLine("2. Dont Clear, Return To Main Menu");
             Console.WriteLine("");
 
@@ -65,7 +74,7 @@
             {
                 case 1:
                     {
-                        dataEntry();
+                        rl.removeRecipe(itemToDelete);
                         break;
                     }
                 case 2:
@@ -83,10 +92,11 @@
             int switchInt;// used to control a switch
 
             Console.WriteLine("Please Select One Of The Following Option");
-            Console.WriteLine("1. Display Stored Recipe");
-            Console.WriteLine("2. Clear And Enter New Recipe");
+            Console.WriteLine("1. Display A Stored Recipe");
+            Console.WriteLine("2. Enter New Recipe");
             Console.WriteLine("3. Scale Recipe Or Reset Recipe Scale");
-            Console.WriteLine("4. Exit Application");
+            Console.WriteLine("4. Delete A Recipe");
+            Console.WriteLine("5. Exit Application");
             Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("");
             Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
@@ -112,7 +122,7 @@
                     }
                 case 2:// clear and enter new data
                     {
-                        menuConfirmClearAndReEnter();
+                        dataEntry();
                         break;
                     }
                 case 3:
@@ -120,7 +130,12 @@
                         menuScaleConvert();
                         break;
                     }
-                case 4:// exit
+                case 4:
+                    {
+                        deleteRecipe();
+                        break;
+                    }
+                case 5:// exit
                     {
                         Environment.Exit(0);
                         break;
@@ -266,12 +281,35 @@
         }
         private void dataEntry() //used to call methods in order for the data entry
         {
+            
+            //variable containing recipe data
+            string nameRecipe;
+            int numberSteps, numberIngredients;
+            double calories = 0;
+            List<string> ingredientName = new List<string>();
+            List<string> units = new List<string>();
+            List<string> stepDescription = new List<string>();
+            List<double> amountOfIngredient = new List<double>();
+
             //declaration for varibles only used inside the class
             string tempStr; //temporary variable, will be overwritten multiple times
             int tempInt;  //temporary variable, will be overwritten multiple times
             double tempDouble; // temporary variable, will be overwritten multiple times
             int counter; //used where i need some source of counter
             int switchInt; // used to opperate the switch case 
+
+            //prompt user, the cast the answer into the format needed
+            Console.WriteLine("Please Enter The Name Of The Recipe");
+            tempStr = Console.ReadLine().Trim();
+            if (!check.notNullInput(tempStr))
+            {
+                while (!check.notNullInput(tempStr))
+                {
+                    Console.WriteLine("You Cannot Leave This Step Blank");
+                    tempStr = Console.ReadLine().Trim();
+                }
+            }
+            nameRecipe = tempStr;
 
             //prompt user, the cast the answer into the format needed
             Console.WriteLine("Please Enter The Amount Of Ingredients In This Recipe");
@@ -286,7 +324,7 @@
                 }
             }
             tempInt = int.Parse(tempStr);
-            rl.setNumIngredients(tempInt);
+            numberIngredients = tempInt;
             Console.WriteLine("");
 
             //prompt user, the cast the answer into the format needed
@@ -302,7 +340,7 @@
                 }
             }
             tempInt = int.Parse(tempStr);
-            rl.setNumStep(tempInt);
+            numberSteps = tempInt;
             Console.WriteLine("");
 
             //propmt user to enter info on ingredients, ie name, unit and amount used
@@ -310,7 +348,7 @@
             {
                 Console.WriteLine("");
                 counter = i + 1;
-                Console.WriteLine("Please Enter Information On The Ingredient for the following parameters             Ingredient{0}/{1}", counter, rl.getNumIngredients());
+                Console.WriteLine("Please Enter Information On The Ingredient for the following parameters             Ingredient{0}/{1}", counter, numberIngredients);
                 Console.WriteLine("Please enter the Ingredients Name");
                 tempStr = Console.ReadLine().Trim();
                 if (!check.notNullInput(tempStr))
@@ -322,7 +360,7 @@
                         tempStr = Console.ReadLine();
                     }
                 }
-                ingredients[i] = tempStr; //adding to local array, setting it on the setter array after all data entry is complete
+                ingredientName.Add(tempStr); //adding to local array, setting it on the setter array after all data entry is complete
 
                 Console.WriteLine("");
 
@@ -355,47 +393,47 @@
                 {
                     case 1:
                         {
-                            units[i] = "ml";//millilitre
+                            units.Add("ml");//millilitre
                             break;
                         }
                     case 2:
                         {
-                            units[i] = "L";//litre
+                            units.Add("L"); //litre
                             break;
                         }
                     case 3:
                         {
-                            units[i] = "Teaspoon";
+                            units.Add("TeaSpoon");
                             break;
                         }
                     case 4:
                         {
-                            units[i] = "Tablespoon";
+                            units.Add("TableSpoon"); 
                             break;
                         }
                     case 5:
                         {
-                            units[i] = "OZ";//Fluid Ounce
+                            units.Add("OZ");//Fluid Ounce
                             break;
                         }
                     case 6:
                         {
-                            units[i] = "Cup";
+                            units.Add("Cup"); 
                             break;
                         }
                     case 7:
                         {
-                            units[i] = "Quart";
+                            units.Add("Quart"); 
                             break;
                         }
                     case 8:
                         {
-                            units[i] = "Pint";
+                            units.Add("Pint");
                             break;
                         }
                     case 9:
                         {
-                            units[i] = "Gallon";
+                            units.Add("Gallon");
                             break;
                         }
                     default:
@@ -416,7 +454,21 @@
                     }
                 }
                 tempDouble = double.Parse(tempStr);
-                amount[i] = tempDouble;
+                amountOfIngredient.Add(tempDouble);
+
+                Console.WriteLine("Please Enter The Amount Of Calories In This Ingredient");//data entry for entering calorie of ingredients
+                tempStr = Console.ReadLine().Trim();
+                if (!check.doubleInput(tempStr))
+                {
+                    while (!check.doubleInput(tempStr))
+                    {
+                        Console.WriteLine("Invalid Number Format Entered");
+                        Console.WriteLine("Please Ensure That Only Numbers Are Entered");
+                        tempStr = Console.ReadLine().Trim();
+                    }
+                }
+                tempDouble = double.Parse(tempStr);
+                calories = calories + tempDouble;
                 Console.WriteLine("--------------------------------------------------------------------");
             }
 
@@ -434,14 +486,11 @@
                         tempStr = Console.ReadLine();
                     }
                 }
-                stepDescript[i] = tempStr;
+                stepDescription.Add(tempStr);
             }
 
-            //Storing data from the arrays for later acces
-            rl.setIngredient(ingredients);
-            rl.setUnitMeasured(units);
-            rl.setUnitAmount(amount);
-            rl.setStepDescrip(stepDescript);
+            //Storing data from the arrays for later access
+            rl.stringCompress(nameRecipe, numberSteps, numberIngredients, ingredientName, units, amountOfIngredient, calories, stepDescription);
 
             Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("");
@@ -451,6 +500,18 @@
     }
     public class InputChecker// class used to store methods for checking if an input is valid
     {
+        public bool nameCheck(string str, List<string> nameList)
+        {
+            foreach (string tempSTR in nameList)
+            {
+                if (tempSTR == str)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
         public bool doubleInput(string str)// checks if input is a double
         {
             if (string.IsNullOrEmpty(str))//null input check
@@ -555,17 +616,22 @@
      */
     {
         //data mass storage
-        private List<string> recipeStore = new List<string>();
+        private SortedDictionary<string, string> recipeStore = new SortedDictionary<string, string>();
         //variable containing recipe data
         private string nameRecipe;
         private int numberSteps, numberIngredients;
         private double calories;
+        public List<string> recipeNames = new List<string>();
         private List<string> ingredientName = new List<string>();
         private List<string> units = new List<string>();
         private List<string> stepDescription = new List<string>();
         private List<double> amountOfIngredient = new List<double>();
 
-        
+
+        public void removeRecipe(string str)//removes a recipe
+        {
+            recipeStore.Remove(str);
+        }
 
         //info getters for geting data drom loaded strings
         public string getRecipeName()
@@ -601,7 +667,7 @@
         {
             return stepDescription;
         }
-        public void stringCompress(string recipeName, int numStep, int numIngredients, string[] ingredients, string[] unitMeasured, double[] amount, double calorie, string[] stepDescrip)
+        public void stringCompress(string recipeName, int numStep, int numIngredients, List<string> ingredients, List<string> unitMeasured, List<double> amount, double calorie, List<string> stepDescrip)
         {
             string stringComp;//string comp is used to construct the recipie storage, ◙ is used to indicate end of string, ◙ was chosen as it is not likely to be used by a users
             string tempSTR = ""; //temporary string
@@ -622,7 +688,7 @@
                 tempSTR = tempSTR + stepDescrip[i] + "◙";
             }
 
-            recipeStore.Add(tempSTR);
+            recipeStore.Add(nameRecipe.ToLower(), tempSTR);
             tempSTR = "";
         }
 
