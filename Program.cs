@@ -1,6 +1,6 @@
 ﻿namespace Prog6221POE
 {
-    //version 1.7b
+    //version 1.8b
     /*
      * TO DO
      * Multiple named Recipies
@@ -754,54 +754,78 @@
                 }
             }
 
-            //parsing string headers
-            //Extracting recipe name
+            // Parsing string headers
+            // Extracting recipe name
             tempChar = loadedSTR[contInt];
             Console.WriteLine("Beginning parsing: " + loadedSTR);
-            while (delimiterCheck(tempChar))
+            while (tempChar != '?')
             {
                 tempChar = loadedSTR[contInt];
-                tempSTR = tempSTR + loadedSTR[contInt];
+                if (tempChar != '?')
+                {
+                    tempSTR = tempSTR + loadedSTR[contInt];
+                }
                 contInt++;
                 Console.WriteLine(tempSTR);
             }
-            contInt++;
+
             nameRecipe = tempSTR;
             tempSTR = "";
 
-            //Extracting number of steps
-            while (delimiterCheck(tempChar))
+            // Extracting number of steps
+            if (contInt < loadedSTR.Length)
             {
                 tempChar = loadedSTR[contInt];
-                tempSTR = tempSTR + loadedSTR[contInt];
-                contInt++;
+                while (tempChar != '?')
+                {
+                    tempChar = loadedSTR[contInt];
+                    if (tempChar != '?')
+                    {
+                        tempSTR = tempSTR + loadedSTR[contInt];
+                    }
+                    contInt++;
+                }
+                Console.WriteLine(tempSTR);
+                numberSteps = int.Parse(tempSTR);
+                tempSTR = "";
             }
-            Console.WriteLine(tempSTR);
-            contInt++;
-            numberSteps = int.Parse(tempSTR);
-            tempSTR = "";
 
-            //Extracting number of ingredients
-            while (delimiterCheck(tempChar))
+            // Extracting number of ingredients
+            if (contInt < loadedSTR.Length)
             {
                 tempChar = loadedSTR[contInt];
-                tempSTR = tempSTR + loadedSTR[contInt];
-                contInt++;
+                while (tempChar != '?')
+                {
+                    tempChar = loadedSTR[contInt];
+                    if (tempChar != '?')
+                    {
+                        tempSTR = tempSTR + loadedSTR[contInt];
+                    }
+                    contInt++;
+                }
+                Console.WriteLine(tempSTR);
+                numberIngredients = int.Parse(tempSTR);
+                tempSTR = "";
             }
-            contInt++;
-            numberIngredients = int.Parse(tempSTR);
-            tempSTR = "";
 
-            //Extracting Total calories
-            while (delimiterCheck(tempChar))
+            // Extracting Total calories
+            if (contInt < loadedSTR.Length)
             {
                 tempChar = loadedSTR[contInt];
-                tempSTR = tempSTR + loadedSTR[contInt];
+                while (tempChar != '?')
+                {
+                    tempChar = loadedSTR[contInt];
+                    if (tempChar != '?')
+                    {
+                        tempSTR = tempSTR + loadedSTR[contInt];
+                    }
+                    contInt++;
+                }
+                Console.WriteLine(tempSTR);
                 contInt++;
+                calories = double.Parse(tempSTR);
+                tempSTR = "";
             }
-            contInt++;
-            calories = double.Parse(tempSTR);
-            tempSTR = "";
 
             //Parsing string body A
             tempInt = numberIngredients * 3;
@@ -809,7 +833,7 @@
             {
                 tempChar = loadedSTR[contInt];
                 //extract ingredient name
-                while (delimiterCheck(tempChar))
+                while (tempChar != '?')
                 {
                     tempChar = loadedSTR[contInt];
                     tempSTR = tempSTR + loadedSTR[contInt];
@@ -820,7 +844,7 @@
                 tempSTR = "";
 
                 //extract ingredient amount
-                while (delimiterCheck(tempChar))
+                while (tempChar != '?')
                 {
                     tempChar = loadedSTR[contInt];
                     tempSTR = tempSTR + loadedSTR[contInt];
@@ -831,7 +855,7 @@
                 tempSTR = "";
 
                 //extract ingredient unit
-                while (delimiterCheck(tempChar))
+                while (tempChar != '?')
                 {
                     tempChar = loadedSTR[contInt];
                     tempSTR = tempSTR + loadedSTR[contInt];
@@ -846,7 +870,7 @@
             {
                 tempChar = loadedSTR[contInt];
                 //extract step descriptions
-                while (delimiterCheck(tempChar))
+                while (tempChar != '?')
                 {
                     tempChar = loadedSTR[contInt];
                     tempSTR = tempSTR + loadedSTR[contInt];
@@ -857,10 +881,6 @@
                 tempSTR = "";
             }
 
-        }
-        private bool delimiterCheck(char a)//used to check for the delimeter character
-        {
-            return a != '?';
         }
     }
     public class RecipeList//used to set,store and get details for the recipe/steps
