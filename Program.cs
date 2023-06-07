@@ -1,6 +1,6 @@
 ﻿namespace Prog6221POE
 {
-    //version 1.6b
+    //version 1.7b
     /*
      * TO DO
      * Multiple named Recipies
@@ -21,8 +21,10 @@
     public class RecipeMachine
     {
         private Compacter rl = new Compacter();//rl stands for recipe list
-        private ScaleConvert sc = new ScaleConvert(); //sc short for scaleConvert
         InputChecker check = new InputChecker();// checking if input is in an acceptable format
+
+        //variables
+        private string currentRecipe;
 
          public void Run()//runs through all relevant methods
         {
@@ -216,11 +218,7 @@
         }
         private void resetChange()
         {
-            ingredients = rl.getIngredients();
-            units = rl.getUnitMeasured();
-            stepDescript = rl.getStepDescrip();
-            amount = rl.getUnitAmount();
-
+            rl.recipeLoad(currentRecipe);
             dataDisplay();
         }
         private void scaleItem()
@@ -245,14 +243,57 @@
                 }
             }
             factor = double.Parse(tempStr);
-
-            sc.scaleIngredient(amount, factor, rl.getNumIngredients());
-
             dataDisplay();
         }
-        private void dataDisplay()// not final display method, only for testing
+        public void scaleIngredient(double factor)// factor is the scale factor
+        {
+            List<double> newAmount = new List<double>();
+            foreach (double d in rl.amountOfIngredient)
+            {
+                newAmount.Add(d * factor);
+            }
+            rl.amountOfIngredient.Clear();
+            rl.amountOfIngredient = newAmount;
+        }
+        private bool realRecipe(string str)
+        {
+            foreach (string nameStr in rl.recipeNames)
+            {
+                if (nameStr == str)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        private void dataDisplay()//Display Method
         {
             int counter; //used where i need some source of counter
+            string tempStr;// used for string manipulation
+            string recipe;// chosen name of a recipe
+
+            //displaying list of recipies
+            Console.WriteLine("Please Select One Of The Following Recipies");
+            foreach (string name in rl.recipeNames)
+            {
+                Console.WriteLine(name);
+            }
+            Console.WriteLine();
+
+            //prompt user, get selected recipe
+            Console.WriteLine("Please Enter The Name Of The Recipe");
+            tempStr = Console.ReadLine().Trim();
+            if (!check.notNullInput(tempStr) || !realRecipe(tempStr))
+            {
+                while (!check.notNullInput(tempStr) || !realRecipe(tempStr))
+                {
+                    Console.WriteLine("Please Enter A Valid Recipe");
+                    tempStr = Console.ReadLine().Trim();
+                }
+            }
+            currentRecipe = tempStr;
+            recipe = tempStr;
+            rl.recipeLoad(recipe);
 
             //information about the recipe
             Console.WriteLine("The following information is about the Recipe");
@@ -260,17 +301,19 @@
             Console.WriteLine("There Are {0} Ingredients", rl.getNumIngredients());
             Console.WriteLine("");
             Console.WriteLine("The Following Are The Ingredients and the amounts Needed");
-            for (int i = 0; i < rl.getNumIngredients(); i++)
+            counter = 0;
+            for(int i = 0;i > rl.recipeNames.Count; i++)
             {
-                counter = i + 1;
-                Console.WriteLine("Ingredient " + counter + ": " + ingredients[i] + "  " + amount[i] + units[i]);//, counter, ingredients[i], amount[i], units[i]
+                counter = counter + 1;
+                Console.WriteLine("Ingredient " + counter + ": " + rl.ingredientName[i] + "  " + rl.amountOfIngredient[i] + rl.units[i]);//, counter, ingredients[i], amount[i], units[i]
             }
+            
             Console.WriteLine("Here Are The Steps For The Recipe");
-            for (int i = 0; i < rl.getNumStep(); i++)
+            for (int i = 0; i < rl.stepDescription.Count; i++)
             {
                 counter = i + 1;
                 Console.WriteLine("Step {0}:", counter);
-                Console.WriteLine(stepDescript[i]);
+                Console.WriteLine(rl.stepDescription[i]);
             }
             Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("");
@@ -344,7 +387,7 @@
             Console.WriteLine("");
 
             //propmt user to enter info on ingredients, ie name, unit and amount used
-            for (int i = 0; i < rl.getNumIngredients(); i++)
+            for (int i = 0; i < numberIngredients; i++)
             {
                 Console.WriteLine("");
                 counter = i + 1;
@@ -473,7 +516,7 @@
             }
 
             Console.WriteLine("");
-            for (int i = 0; i < rl.getNumStep(); i++)//used to enter info to describe each step
+            for (int i = 0; i < numberSteps; i++)//used to enter info to describe each step
             {
                 counter = i + 1;
                 Console.WriteLine("Please Enter The Description For Step {0}.", counter);
@@ -594,18 +637,7 @@
             return true;
         }
     }
-    //Scaler Does not have the required functionallity, but is suitible for now
-    public class ScaleConvert //used to scale and convert the units measured
-    {//will possible be called ony at time of display
-        public double[] scaleIngredient(double[] amount, double factor, int numItems)//amount is the array for the full amount, factor is the scale factor, numItems = number of items to scale
-        {
-            for (int i = 0; i < numItems; i++)
-            {
-                amount[i] = amount[i] * factor;
-            }
-            return amount;
-        }
-    }
+   
     public class Compacter//used to set,store and get details for the recipe/steps
     /*
      * String Header: name, num steps, num Ingerdients, total calories (fixed Length)
@@ -618,22 +650,31 @@
         //data mass storage
         private SortedDictionary<string, string> recipeStore = new SortedDictionary<string, string>();
         //variable containing recipe data
-        private string nameRecipe;
-        private int numberSteps, numberIngredients;
-        private double calories;
+        public string nameRecipe;
+        public int numberSteps, numberIngredients;
+        public double calories;
         public List<string> recipeNames = new List<string>();
-        private List<string> ingredientName = new List<string>();
-        private List<string> units = new List<string>();
-        private List<string> stepDescription = new List<string>();
-        private List<double> amountOfIngredient = new List<double>();
+        public List<string> ingredientName = new List<string>();
+        public List<string> units = new List<string>();
+        public List<string> stepDescription = new List<string>();
+        public List<double> amountOfIngredient = new List<double>();
 
 
         public void removeRecipe(string str)//removes a recipe
         {
             recipeStore.Remove(str);
+            updateName();
         }
 
         //info getters for geting data drom loaded strings
+        private void updateName()
+        {
+            recipeNames.Clear();
+            foreach (KeyValuePair<string, string> kvp in recipeStore)
+            {
+                recipeNames.Add(kvp.Key);
+            }
+        }
         public string getRecipeName()
         {
             return nameRecipe;
@@ -672,45 +713,57 @@
             string stringComp;//string comp is used to construct the recipie storage, ◙ is used to indicate end of string, ◙ was chosen as it is not likely to be used by a users
             string tempSTR = ""; //temporary string
 
-            stringComp = recipeName + "◙" + numStep + "◙" + numIngredients + "◙" + calorie + "◙"; //header section of string
+            stringComp = recipeName + "?" + numStep + "?" + numIngredients + "?" + calorie + "?"; //header section of string
 
             //string body section A
             for (int i = 0; i < numIngredients; i++)
             {
-                tempSTR = ingredients[i] + "◙" + amount[i] + "◙" + unitMeasured[i] + "◙";
+                stringComp = stringComp + ingredients[i] + "?" + amount[i] + "?" + unitMeasured[i] + "?";
             }
-
-            stringComp = stringComp + tempSTR; //adding section A to the string
+            
             tempSTR = "";// clearing for B section manipulations
-
             for (int i = 0; i < numStep; i++)
             {
-                tempSTR = tempSTR + stepDescrip[i] + "◙";
+                stringComp = stringComp + stepDescrip[i] + "?";
             }
 
-            recipeStore.Add(nameRecipe.ToLower(), tempSTR);
+            recipeStore.Add(recipeName.ToLower(), stringComp);
+            Console.WriteLine("Recipe Name: {0}, String: {1}", recipeName, stringComp);
             tempSTR = "";
+            updateName();
         }
-
-        public void recipeLoad(string compString)//loads string for information extraction
+        public void recipeLoad(string compStr)//loads string for information extraction
         {
             //string that recipeLoad loads
-            string loadedSTR;
-            loadedSTR = compString;
+            string loadedSTR ="";
 
             //variables exclusive to this method
             char tempChar;//used multiple times for diffrent manipulation
             int contInt = 0;// control integer for loops
             int tempInt;// temporary intager
             string tempSTR = "";// used to build up data that the string manipulation reveals
+            string compString;
+
+            //loading string 
+            foreach (KeyValuePair<string, string> kvp in recipeStore)
+            {
+                if (kvp.Key.ToLower() == compStr.ToLower())
+                {
+                    loadedSTR = kvp.Value;
+                    Console.WriteLine("Recipe Loaded Part 1 , recipe name: {0}, recipe String : {1}", kvp.Key, kvp.Value);
+                }
+            }
 
             //parsing string headers
             //Extracting recipe name
-            tempChar = loadedSTR[0];
+            tempChar = loadedSTR[contInt];
+            Console.WriteLine("Beginning parsing: " + loadedSTR);
             while (delimiterCheck(tempChar))
             {
+                tempChar = loadedSTR[contInt];
                 tempSTR = tempSTR + loadedSTR[contInt];
                 contInt++;
+                Console.WriteLine(tempSTR);
             }
             contInt++;
             nameRecipe = tempSTR;
@@ -719,9 +772,11 @@
             //Extracting number of steps
             while (delimiterCheck(tempChar))
             {
+                tempChar = loadedSTR[contInt];
                 tempSTR = tempSTR + loadedSTR[contInt];
                 contInt++;
             }
+            Console.WriteLine(tempSTR);
             contInt++;
             numberSteps = int.Parse(tempSTR);
             tempSTR = "";
@@ -729,6 +784,7 @@
             //Extracting number of ingredients
             while (delimiterCheck(tempChar))
             {
+                tempChar = loadedSTR[contInt];
                 tempSTR = tempSTR + loadedSTR[contInt];
                 contInt++;
             }
@@ -739,6 +795,7 @@
             //Extracting Total calories
             while (delimiterCheck(tempChar))
             {
+                tempChar = loadedSTR[contInt];
                 tempSTR = tempSTR + loadedSTR[contInt];
                 contInt++;
             }
@@ -750,9 +807,11 @@
             tempInt = numberIngredients * 3;
             for (tempInt = 0; tempInt <= numberIngredients; tempInt++)
             {
+                tempChar = loadedSTR[contInt];
                 //extract ingredient name
                 while (delimiterCheck(tempChar))
                 {
+                    tempChar = loadedSTR[contInt];
                     tempSTR = tempSTR + loadedSTR[contInt];
                     contInt++;
                 }
@@ -763,6 +822,7 @@
                 //extract ingredient amount
                 while (delimiterCheck(tempChar))
                 {
+                    tempChar = loadedSTR[contInt];
                     tempSTR = tempSTR + loadedSTR[contInt];
                     contInt++;
                 }
@@ -773,6 +833,7 @@
                 //extract ingredient unit
                 while (delimiterCheck(tempChar))
                 {
+                    tempChar = loadedSTR[contInt];
                     tempSTR = tempSTR + loadedSTR[contInt];
                     contInt++;
                 }
@@ -783,9 +844,11 @@
             //parsing string body b
             for (tempInt = 0; tempInt <= numberSteps; tempInt++)
             {
+                tempChar = loadedSTR[contInt];
                 //extract step descriptions
                 while (delimiterCheck(tempChar))
                 {
+                    tempChar = loadedSTR[contInt];
                     tempSTR = tempSTR + loadedSTR[contInt];
                     contInt++;
                 }
@@ -797,11 +860,7 @@
         }
         private bool delimiterCheck(char a)//used to check for the delimeter character
         {
-            if (a == '◙')
-            {
-                return false;
-            }
-            return true;
+            return a != '?';
         }
     }
     public class RecipeList//used to set,store and get details for the recipe/steps
