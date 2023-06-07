@@ -1,6 +1,6 @@
 ﻿namespace Prog6221POE
 {
-    //version 1.8b
+    //version 1.9b
     /*
      * TO DO
      * Multiple named Recipies
@@ -26,11 +26,11 @@
         //variables
         private string currentRecipe;
 
-         public void Run()//runs through all relevant methods
+        public void Run()//runs through all relevant methods
         {
             dataEntry();
         }
-        
+
         private void deleteRecipe()//Confirmation for data removal
         {
             //variable declaration
@@ -302,12 +302,12 @@
             Console.WriteLine("");
             Console.WriteLine("The Following Are The Ingredients and the amounts Needed");
             counter = 0;
-            for(int i = 0;i > rl.recipeNames.Count; i++)
+            for (int i = 0; i > rl.recipeNames.Count; i++)
             {
                 counter = counter + 1;
                 Console.WriteLine("Ingredient " + counter + ": " + rl.ingredientName[i] + "  " + rl.amountOfIngredient[i] + rl.units[i]);//, counter, ingredients[i], amount[i], units[i]
             }
-            
+
             Console.WriteLine("Here Are The Steps For The Recipe");
             for (int i = 0; i < rl.stepDescription.Count; i++)
             {
@@ -324,7 +324,7 @@
         }
         private void dataEntry() //used to call methods in order for the data entry
         {
-            
+
             //variable containing recipe data
             string nameRecipe;
             int numberSteps, numberIngredients;
@@ -451,7 +451,7 @@
                         }
                     case 4:
                         {
-                            units.Add("TableSpoon"); 
+                            units.Add("TableSpoon");
                             break;
                         }
                     case 5:
@@ -461,12 +461,12 @@
                         }
                     case 6:
                         {
-                            units.Add("Cup"); 
+                            units.Add("Cup");
                             break;
                         }
                     case 7:
                         {
-                            units.Add("Quart"); 
+                            units.Add("Quart");
                             break;
                         }
                     case 8:
@@ -637,7 +637,7 @@
             return true;
         }
     }
-   
+
     public class Compacter//used to set,store and get details for the recipe/steps
     /*
      * String Header: name, num steps, num Ingerdients, total calories (fixed Length)
@@ -720,7 +720,7 @@
             {
                 stringComp = stringComp + ingredients[i] + "?" + amount[i] + "?" + unitMeasured[i] + "?";
             }
-            
+
             tempSTR = "";// clearing for B section manipulations
             for (int i = 0; i < numStep; i++)
             {
@@ -732,10 +732,144 @@
             tempSTR = "";
             updateName();
         }
-        public void recipeLoad(string compStr)//loads string for information extraction
+
+        public void recipeLoad(string compStr)
+        {
+            // String that recipeLoad loads
+            string loadedSTR = "";
+
+            // Variables exclusive to this method
+            char tempChar; // Used multiple times for different manipulations
+            int contInt = 0; // Control integer for loops
+            int tempInt; // Temporary integer
+            string tempSTR = ""; // Used to build up data that the string manipulation reveals
+
+            // Loading string
+            foreach (KeyValuePair<string, string> kvp in recipeStore)
+            {
+                if (kvp.Key.ToLower() == compStr.ToLower())
+                {
+                    loadedSTR = kvp.Value;
+                    break; // Exit the loop once the matching key is found
+                }
+            }
+
+            // Parsing string headers
+            // Extracting recipe name
+            while (contInt < loadedSTR.Length && loadedSTR[contInt] != '?')
+            {
+                tempSTR += loadedSTR[contInt];
+                contInt++;
+            }
+            Console.WriteLine("Name " + tempSTR);
+            nameRecipe = tempSTR;
+            tempSTR = "";
+
+            // Extracting number of steps
+            if (contInt < loadedSTR.Length && loadedSTR[contInt] == '?')
+            {
+                contInt++; // Move past the '?'
+                while (contInt < loadedSTR.Length && loadedSTR[contInt] != '?')
+                {
+                    tempSTR += loadedSTR[contInt];
+                    contInt++;
+                }
+                Console.WriteLine("numSteps " + tempSTR);
+                numberSteps = int.Parse(tempSTR);
+                tempSTR = "";
+            }
+
+            // Extracting number of ingredients
+            if (contInt < loadedSTR.Length && loadedSTR[contInt] == '?')
+            {
+                contInt++; // Move past the '?'
+                while (contInt < loadedSTR.Length && loadedSTR[contInt] != '?')
+                {
+                    tempSTR += loadedSTR[contInt];
+                    contInt++;
+                }
+                Console.WriteLine("Num Ingredients " + tempSTR);
+                numberIngredients = int.Parse(tempSTR);
+                tempSTR = "";
+            }
+
+            // Extracting Total calories
+            if (contInt < loadedSTR.Length && loadedSTR[contInt] == '?')
+            {
+                contInt++; // Move past the '?'
+                while (contInt < loadedSTR.Length && loadedSTR[contInt] != '?')
+                {
+                    tempSTR += loadedSTR[contInt];
+                    contInt++;
+                }
+                Console.WriteLine("CAls " + tempSTR);
+                calories = double.Parse(tempSTR);
+                tempSTR = "";
+            }
+
+            // Parsing string body A
+            for (int i = 0; i < numberIngredients; i++)
+            {
+                contInt++;
+                tempChar = loadedSTR[contInt];//ingredient name
+                while (contInt < loadedSTR.Length && loadedSTR[contInt] != '?')
+                {
+                    tempChar = loadedSTR[contInt];
+                    tempSTR += loadedSTR[contInt];
+                    contInt++;
+                }
+                ingredientName.Add(tempSTR);
+                Console.WriteLine("Ingredient Name " + tempSTR);
+                tempSTR = "";
+
+                // Extract ingredient amount
+                if (contInt < loadedSTR.Length && loadedSTR[contInt] == '?')
+                {
+                    contInt++; // Move past the '?'
+                    while (contInt < loadedSTR.Length && loadedSTR[contInt] != '?')
+                    {
+                        tempSTR += loadedSTR[contInt];
+                        contInt++;
+                    }
+                    Console.WriteLine("amount of ingred " + tempSTR);
+                    amountOfIngredient.Add(double.Parse(tempSTR));
+                    tempSTR = "";
+                }
+
+                // Extract ingredient unit
+                if (contInt < loadedSTR.Length && loadedSTR[contInt] == '?')
+                {
+                    contInt++; // Move past the '?'
+                    while (contInt < loadedSTR.Length && loadedSTR[contInt] != '?')
+                    {
+                        tempSTR += loadedSTR[contInt];
+                        contInt++;
+                    }
+                    Console.WriteLine("ingred Units  " + tempSTR);
+                    units.Add(tempSTR);
+                    tempSTR = "";
+                }
+            }
+
+            // Parsing string body B
+            for (int i = 0; i < numberSteps; i++)
+            {
+                tempChar = loadedSTR[contInt];
+                while (contInt < loadedSTR.Length && loadedSTR[contInt] != '?')
+                {
+                    tempChar = loadedSTR[contInt];
+                    tempSTR += loadedSTR[contInt];
+                    contInt++;
+                }
+                stepDescription.Add(tempSTR);
+                tempSTR = "";
+            }
+        }
+
+        public void rrecipeLoad(string compStr)//loads string for information extraction
         {
             //string that recipeLoad loads
-            string loadedSTR ="";
+            string loadedSTR = "";
 
             //variables exclusive to this method
             char tempChar;//used multiple times for diffrent manipulation
@@ -750,7 +884,6 @@
                 if (kvp.Key.ToLower() == compStr.ToLower())
                 {
                     loadedSTR = kvp.Value;
-                    Console.WriteLine("Recipe Loaded Part 1 , recipe name: {0}, recipe String : {1}", kvp.Key, kvp.Value);
                 }
             }
 
@@ -822,7 +955,6 @@
                     contInt++;
                 }
                 Console.WriteLine(tempSTR);
-                contInt++;
                 calories = double.Parse(tempSTR);
                 tempSTR = "";
             }
@@ -839,7 +971,6 @@
                     tempSTR = tempSTR + loadedSTR[contInt];
                     contInt++;
                 }
-                contInt++;
                 ingredientName.Add(tempSTR);
                 tempSTR = "";
 
@@ -850,7 +981,6 @@
                     tempSTR = tempSTR + loadedSTR[contInt];
                     contInt++;
                 }
-                contInt++;
                 amountOfIngredient.Add(double.Parse(tempSTR));
                 tempSTR = "";
 
@@ -861,7 +991,6 @@
                     tempSTR = tempSTR + loadedSTR[contInt];
                     contInt++;
                 }
-                contInt++;
                 units.Add(tempSTR);
                 tempSTR = "";
             }
@@ -876,7 +1005,6 @@
                     tempSTR = tempSTR + loadedSTR[contInt];
                     contInt++;
                 }
-                contInt++;
                 stepDescription.Add(tempSTR);
                 tempSTR = "";
             }
